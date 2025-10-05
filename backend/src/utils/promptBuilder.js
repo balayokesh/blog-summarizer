@@ -40,7 +40,11 @@ function buildUserPrompt(text, length) {
 
 Requirements:
 1. Create 5-7 bullet points that capture the key information
-2. Include a 2-3 sentence TL;DR (Too Long; Didn't Read) summary
+2. Include a TL;DR (Too Long; Didn't Read) summary of 2-3 sentences that:
+  - Synthesizes the core message of the text
+  - Avoids repeating bullet points verbatim
+  - Uses clear, professional language suitable for executive readers
+  - Highlights the most impactful insights or conclusions
 3. Preserve important names, dates, numbers, and locations
 4. Maintain factual accuracy and neutrality
 5. Avoid adding information not present in the source
@@ -55,7 +59,10 @@ BULLETS:
 • [Sixth key point]
 • [Seventh key point]
 
-TL;DR: [2-3 sentence summary capturing the essence]
+TL;DR: 
+TL;DR: [2-3 sentence summary capturing the essence. 
+Do not say that a summary cannot be provided. 
+Always produce a concise synthesis even if the text is short.]
 
 Text to summarize:
 ${text}`;
@@ -104,18 +111,18 @@ function parseResponse(response) {
 
   for (const line of lines) {
     const trimmed = line.trim();
-    
+
     if (trimmed.toLowerCase().startsWith('bullets:')) {
       inBulletsSection = true;
       continue;
     }
-    
+
     if (trimmed.toLowerCase().startsWith('tldr:')) {
       inBulletsSection = false;
       tldr = trimmed.substring(5).trim();
       continue;
     }
-    
+
     if (inBulletsSection && trimmed.startsWith('•')) {
       const bullet = trimmed.substring(1).trim();
       if (bullet) {
@@ -131,9 +138,31 @@ function parseResponse(response) {
   }
 
   if (!tldr) {
-    // Create a simple TL;DR from the first few sentences
-    const sentences = response.split(/[.!?]+/).filter(s => s.trim().length > 10);
-    tldr = sentences.slice(0, 2).join('. ').trim() + '.';
+    const nonBulletLines = lines.filter(line =>
+      !line.trim().startsWith('•') &&
+      line.trim().length > 20 &&
+      !/cannot be provided|no summary/i.test(line)
+    );
+
+    const candidateLines = nonBulletLines.filter(line =>
+      /^[A-Z]/.test(line.trim()) && /[.!?]$/.test(line.trim())
+    );
+
+    tldr = candidateLines.slice(0, 2).join(' ').trim();
+
+    if (!tldr) {
+      // As a last resort, compress the first two bullets into a sentence
+      tldr = bullets.slice(0, 2).join('. ') + '.';
+    }
+  }
+
+  if (tldr.split(' ').length > 60) {
+    tldr = tldr.split(' ').slice(0, 60).join(' ') + '…';
+  }
+
+  // if tldr starts with TL;DR: remove it
+  if (tldr.toLowerCase().startsWith('tl;dr: ')) {
+    tldr = tldr.substring(7).trim();
   }
 
   // Validate and clean results
