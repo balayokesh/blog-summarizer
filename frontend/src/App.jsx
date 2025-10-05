@@ -11,6 +11,8 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
+import CircularProgress from '@mui/material/CircularProgress';
+import { keyframes } from '@emotion/react';
 
 import './App.css'
 
@@ -19,6 +21,13 @@ const lengthOptions = [
 	'medium',
 	'large',
 ];
+
+// Rocket animation keyframes
+const rocketFly = keyframes`
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0); }
+`;
 
 function App() {
 	const [summarizedText, setSummarizedText] = useState('Use AI to summarize your blog post');
@@ -127,12 +136,12 @@ function App() {
 								<Button
 									variant="contained"
 									size='large'
-									endIcon={<AutoAwesomeIcon />}
+									endIcon={!loading ? <AutoAwesomeIcon /> : null}
 									onClick={handleSummarize}
 									fullWidth
 									disabled={loading || !blogContent.trim()}
 								>
-									{loading ? 'Summarizing...' : 'Summarize'}
+									{loading ? <CircularProgress size={24} color="inherit" /> : 'Summarize'}
 								</Button>
 								<Button
 									variant="outlined"
@@ -151,10 +160,17 @@ function App() {
 					</Box>
 
 					<Box className="summary-section">
-						<Paper elevation={3} style={{ height: 425 }} sx={{ p: 3, minHeight: 300, minWidth: 500 }}>
-							<Typography variant="h6" component="h2" gutterBottom>
-								Summary Output
-							</Typography>
+						<Paper elevation={3} style={{ height: 425 }} sx={{ p: 3, minHeight: 300, minWidth: 500, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
+							{loading && (
+								<Box sx={{ display: 'flex', justifyContent: 'center', mb: 2, width: '100%' }}>
+									<AutoAwesomeIcon sx={{ fontSize: 48, color: 'primary.main', animation: `${rocketFly} 1s infinite` }} />
+								</Box>
+							)}
+							{(!loading && !summarizedText) && (
+								<Typography variant="h6" component="h2" gutterBottom sx={{ width: '100%', textAlign: 'left' }}>
+									Summary Output
+								</Typography>
+							)}
 							{loading ? (
 								<Typography variant="body1">Generating summary...</Typography>
 							) : (
