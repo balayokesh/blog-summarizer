@@ -8,6 +8,8 @@ import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Button from '@mui/material/Button';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
 
 import './App.css'
 
@@ -19,7 +21,7 @@ const lengthOptions = [
 
 function App() {
 	const [summarizedText, setSummarizedText] = useState("Use AI to summarize your blog post");
-	const [lengthOption, setLengthOption] = useState([]);
+	const [lengthOption, setLengthOption] = useState('small');
 
 	const handleChange = (event) => {
 		const {
@@ -30,52 +32,77 @@ function App() {
 		);
 	};
 
+	const handleSummarize = () => {
+		// This would be replaced with actual API call
+		setSummarizedText("This is where your summarized blog post will appear. The summary length will be " + lengthOption + ".");
+	};
+
 	return (
 		<>
-			<h1>Blog Summarizer</h1>
+			<Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+				<Typography variant="h1" component="h1" align="center" sx={{ my: 4 }}>
+					Blog Summarizer
+				</Typography>
 
-			<div className="main-container">
-				<Box sx={{ width: 500, maxWidth: '100%' }} fullWidth>
-					<FormControl fullWidth style={{ marginBottom: "15px" }}>
-						<TextField fullWidth label="Paste the blog content here" id="blog-content" />
-					</FormControl>
+				<Box className="main-container" sx={{ flex: 1 }}>
+					<Box className="form-section">
+						<Box sx={{ width: 500, maxWidth: '100%' }}>
+							<FormControl fullWidth sx={{ mb: 3 }}>
+								<TextField 
+									fullWidth 
+									label="Paste the blog content here" 
+									id="blog-content" 
+									variant="outlined"
+									multiline
+									rows={10}
+									sx={{ mb: 2 }}
+								/>
+							</FormControl>
 
-					<FormControl fullWidth style={{ marginBottom: "15px" }}>
-						<InputLabel id="preferred-summary-length-label">Preferred summary length</InputLabel>
-						<Select
-							labelId="preferred-summary-length-label"
-							id="preferred-summary-length"
-							value={lengthOption}
-							onChange={handleChange}
-							input={<OutlinedInput label="Preferred summary length" />}
-						>
-							{lengthOptions.map((option) => (
-								<MenuItem
-									key={option}
-									value={option}
+							<FormControl fullWidth sx={{ mb: 3 }}>
+								<InputLabel id="preferred-summary-length-label">Preferred summary length</InputLabel>
+								<Select
+									labelId="preferred-summary-length-label"
+									id="preferred-summary-length"
+									value={lengthOption}
+									onChange={handleChange}
+									input={<OutlinedInput label="Preferred summary length" />}
 								>
-									{option}
-								</MenuItem>
-							))}
-						</Select>
-					</FormControl>
+									{lengthOptions.map((option) => (
+										<MenuItem
+											key={option}
+											value={option}
+										>
+											{option}
+										</MenuItem>
+									))}
+								</Select>
+							</FormControl>
 
-					<Button
-						variant="contained"
-						size='large'
-						endIcon={
-							<AutoAwesomeIcon />
-						}
-					>
-						Summarize
-					</Button> 	
+							<Button
+								variant="contained"
+								size='large'
+								endIcon={<AutoAwesomeIcon />}
+								onClick={handleSummarize}
+								fullWidth
+							>
+								Summarize
+							</Button>
+						</Box>
+					</Box>
 
+					<Box className="summary-section">
+						<Paper elevation={3} sx={{ p: 3, minHeight: 300, width: 500, maxWidth: '100%' }}>
+							<Typography variant="h6" component="h2" gutterBottom>
+								Summary Output
+							</Typography>
+							<Typography variant="body1" component="p">
+								{summarizedText}
+							</Typography>
+						</Paper>
+					</Box>
 				</Box>
-
-				<div>
-					<p>{summarizedText}</p>
-				</div>
-			</div>
+			</Box>
 		</>
 	)
 }

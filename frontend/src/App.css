@@ -3,11 +3,29 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  /* Prevent scrollbar */
+  overflow: hidden;
 }
 
 .main-container {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-section {
+  flex: 1;
+}
+
+.summary-section {
+  flex: 1;
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .main-container {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-around;
+  }
 }
