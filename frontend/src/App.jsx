@@ -33,7 +33,7 @@ const rocketFly = keyframes`
 `;
 
 function App() {
-	const [summarizedText, setSummarizedText] = useState('Use AI to summarize your blog post');
+	const [summarizedText, setSummarizedText] = useState('');
 	const [bullets, setBullets] = useState([]);
 	const [lengthOption, setLengthOption] = useState('short');
 	const [blogContent, setBlogContent] = useState('');
@@ -78,7 +78,7 @@ function App() {
 
 	const handleReset = () => {
 		setBlogContent('');
-		setSummarizedText('Use AI to summarize your blog post');
+		setSummarizedText('');
 		setBullets([]);
 		setLengthOption('short');
 		setError('');
@@ -96,7 +96,7 @@ function App() {
 		}
 	};
 
-	const isDefaultSummary = summarizedText === 'Use AI to summarize your blog post';
+	const isDefaultSummary = summarizedText === '';
 
 	// Reset showBullets when new summary is generated or reset
 	useEffect(() => {
@@ -219,8 +219,9 @@ function App() {
 								</Box>
 							)}
 							{(!loading && !summarizedText) && (
-								<Typography variant="h6" component="h2" gutterBottom sx={{ width: '100%', textAlign: 'left' }}>
-									Summary Output
+								<Typography variant="body2" sx={{ width: '100%', textAlign: 'center', color: 'text.secondary', mt: 8 }}>
+									Your summary will appear here after you submit your blog content.<br />
+									Paste your blog post and click Summarize to get a concise TL;DR or bullet points!
 								</Typography>
 							)}
 							{loading ? (
