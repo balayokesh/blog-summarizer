@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
@@ -15,6 +15,7 @@ import Paper from '@mui/material/Paper';
 import CircularProgress from '@mui/material/CircularProgress';
 import { keyframes } from '@emotion/react';
 import IconButton from '@mui/material/IconButton';
+import Collapse from '@mui/material/Collapse';
 
 import './App.css'
 
@@ -39,6 +40,7 @@ function App() {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
 	const [copySuccess, setCopySuccess] = useState(false);
+	const [showBullets, setShowBullets] = useState(false);
 
 	const handleChange = (event) => {
 		const {
@@ -95,6 +97,11 @@ function App() {
 	};
 
 	const isDefaultSummary = summarizedText === 'Use AI to summarize your blog post';
+
+	// Reset showBullets when new summary is generated or reset
+	useEffect(() => {
+		setShowBullets(false);
+	}, [summarizedText, bullets]);
 
 	return (
 		<>
@@ -220,13 +227,28 @@ function App() {
 								<Typography variant="body1">Generating summary...</Typography>
 							) : (
 								<>
-									{summarizedText && (
-										<Typography variant="body1" sx={{ mb: 1, width: '100%', textAlign: 'left' }}>{summarizedText}</Typography>
-									)}
-									{bullets.length > 0 && (
-										<ul style={{ textAlign: 'left', margin: 0, paddingLeft: 20, width: '100%' }}>
-											{bullets.map((b, i) => (<li key={i}>{b}</li>))}
-										</ul>
+									{/* Summary display logic: TL;DR by default, show bullets only if user clicks 'Show more details' */}
+									{!loading && summarizedText && !isDefaultSummary && (
+										<Box sx={{ width: '100%' }}>
+											<Typography variant="body1" sx={{ mb: 1, width: '100%', textAlign: 'left' }}>{summarizedText}</Typography>
+											{bullets.length > 0 && !showBullets && (
+												<Button variant="text" size="small" sx={{ pl: 0 }} onClick={() => setShowBullets(true)}>
+													Show more details
+												</Button>
+											)}
+											<Collapse in={showBullets}>
+												{bullets.length > 0 && (
+													<Box sx={{ mt: 1 }}>
+														<Button variant="text" size="small" sx={{ pl: 0, mb: 1 }} onClick={() => setShowBullets(false)}>
+															Hide details
+														</Button>
+														<ul style={{ textAlign: 'left', margin: 0, paddingLeft: 20, width: '100%' }}>
+															{bullets.map((b, i) => (<li key={i}>{b}</li>))}
+														</ul>
+													</Box>
+												)}
+											</Collapse>
+										</Box>
 									)}
 								</>
 							)}
