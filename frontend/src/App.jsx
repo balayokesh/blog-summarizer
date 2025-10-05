@@ -9,10 +9,12 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Button from '@mui/material/Button';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import CircularProgress from '@mui/material/CircularProgress';
 import { keyframes } from '@emotion/react';
+import IconButton from '@mui/material/IconButton';
 
 import './App.css'
 
@@ -36,6 +38,7 @@ function App() {
 	const [blogContent, setBlogContent] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
+	const [copySuccess, setCopySuccess] = useState(false);
 
 	const handleChange = (event) => {
 		const {
@@ -78,6 +81,20 @@ function App() {
 		setLengthOption('short');
 		setError('');
 	};
+
+	const handleCopy = async () => {
+		if (summarizedText) {
+			try {
+				await navigator.clipboard.writeText(summarizedText);
+				setCopySuccess(true);
+				setTimeout(() => setCopySuccess(false), 1500);
+			} catch (err) {
+				setCopySuccess(false);
+			}
+		}
+	};
+
+	const isDefaultSummary = summarizedText === 'Use AI to summarize your blog post';
 
 	return (
 		<>
@@ -160,7 +177,35 @@ function App() {
 					</Box>
 
 					<Box className="summary-section">
-						<Paper elevation={3} style={{ height: 425 }} sx={{ p: 3, minHeight: 300, minWidth: 500, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
+						<Paper elevation={3} style={{ height: 425, position: 'relative' }} sx={{ p: 3, minHeight: 300, minWidth: 500, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
+							{/* Floating copy button */}
+							{(summarizedText && !isDefaultSummary || bullets.length > 0) && (
+								<IconButton
+									aria-label="Copy summary"
+									size="medium"
+									onClick={async () => {
+										let textToCopy = summarizedText || '';
+										if (bullets.length > 0) {
+											textToCopy += (textToCopy ? '\n\n' : '') + bullets.join('\n');
+										}
+										try {
+											await navigator.clipboard.writeText(textToCopy);
+											setCopySuccess(true);
+											setTimeout(() => setCopySuccess(false), 1500);
+										} catch (err) {
+											setCopySuccess(false);
+										}
+									}}
+									sx={{ position: 'absolute', top: 12, right: 12, zIndex: 2, bgcolor: 'background.paper', boxShadow: 2 }}
+								>
+									<ContentCopyIcon fontSize="small" />
+								</IconButton>
+							)}
+							{copySuccess && (
+								<Typography variant="caption" color="success.main" sx={{ position: 'absolute', top: 16, right: 48, zIndex: 2, bgcolor: 'background.paper', px: 1, borderRadius: 1 }}>
+									Copied!
+								</Typography>
+							)}
 							{loading && (
 								<Box sx={{ display: 'flex', justifyContent: 'center', mb: 2, width: '100%' }}>
 									<AutoAwesomeIcon sx={{ fontSize: 48, color: 'primary.main', animation: `${rocketFly} 1s infinite` }} />
@@ -175,9 +220,11 @@ function App() {
 								<Typography variant="body1">Generating summary...</Typography>
 							) : (
 								<>
-									{summarizedText && <Typography variant="body1" sx={{ mb: 2 }}>{summarizedText}</Typography>}
+									{summarizedText && (
+										<Typography variant="body1" sx={{ mb: 1, width: '100%', textAlign: 'left' }}>{summarizedText}</Typography>
+									)}
 									{bullets.length > 0 && (
-										<ul style={{ textAlign: 'left', margin: 0, paddingLeft: 20 }}>
+										<ul style={{ textAlign: 'left', margin: 0, paddingLeft: 20, width: '100%' }}>
 											{bullets.map((b, i) => (<li key={i}>{b}</li>))}
 										</ul>
 									)}
