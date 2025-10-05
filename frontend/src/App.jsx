@@ -14,21 +14,21 @@ import Paper from '@mui/material/Paper';
 import './App.css'
 
 const lengthOptions = [
-	'small',
+	'short',
 	'medium',
 	'large',
 ];
 
 function App() {
 	const [summarizedText, setSummarizedText] = useState("Use AI to summarize your blog post");
-	const [lengthOption, setLengthOption] = useState('small');
+	const [lengthOption, setLengthOption] = useState('short');
 
 	const handleChange = (event) => {
 		const {
 			target: { value },
 		} = event;
 		setLengthOption(
-			typeof value === 'string' ? value : 'small',
+			typeof value === 'string' ? value : 'short',
 		);
 	};
 
