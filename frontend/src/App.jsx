@@ -20,8 +20,12 @@ const lengthOptions = [
 ];
 
 function App() {
-	const [summarizedText, setSummarizedText] = useState("Use AI to summarize your blog post");
+	const [summarizedText, setSummarizedText] = useState('Use AI to summarize your blog post');
+	const [bullets, setBullets] = useState([]);
 	const [lengthOption, setLengthOption] = useState('short');
+	const [blogContent, setBlogContent] = useState('');
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState('');
 
 	const handleChange = (event) => {
 		const {
@@ -32,9 +36,29 @@ function App() {
 		);
 	};
 
-	const handleSummarize = () => {
-		// This would be replaced with actual API call
-		setSummarizedText("This is where your summarized blog post will appear. The summary length will be " + lengthOption + ".");
+	const handleSummarize = async () => {
+		setError('');
+		setLoading(true);
+		setSummarizedText('');
+		setBullets([]);
+		try {
+			const response = await fetch('https://blog-summarizer-fetn.onrender.com/summarize', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ text: blogContent, length: lengthOption })
+			});
+			const data = await response.json();
+			if (data.success && data.data) {
+				setSummarizedText(data.data.tldr);
+				setBullets(data.data.bullets || []);
+			} else {
+				setError('Failed to summarize. Please try again.');
+			}
+		} catch (err) {
+			setError('Network error. Please try again.');
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -56,6 +80,8 @@ function App() {
 									multiline
 									rows={10}
 									sx={{ mb: 2 }}
+									value={blogContent}
+									onChange={e => setBlogContent(e.target.value)}
 								/>
 							</FormControl>
 
@@ -85,20 +111,31 @@ function App() {
 								endIcon={<AutoAwesomeIcon />}
 								onClick={handleSummarize}
 								fullWidth
+								disabled={loading || !blogContent.trim()}
 							>
-								Summarize
+								{loading ? 'Summarizing...' : 'Summarize'}
 							</Button>
+							{error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
 						</Box>
 					</Box>
 
 					<Box className="summary-section">
-						<Paper elevation={3} sx={{ p: 3, minHeight: 300, width: 500, maxWidth: '100%' }}>
+						<Paper elevation={3} style={{ minHeight: 450 }} sx={{ p: 3, minHeight: 300, width: 500, maxWidth: '100%' }}>
 							<Typography variant="h6" component="h2" gutterBottom>
 								Summary Output
 							</Typography>
-							<Typography variant="body1" component="p">
-								{summarizedText}
-							</Typography>
+							{loading ? (
+								<Typography variant="body1">Generating summary...</Typography>
+							) : (
+								<>
+									{summarizedText && <Typography variant="body1" sx={{ mb: 2 }}>{summarizedText}</Typography>}
+									{bullets.length > 0 && (
+										<ul style={{ textAlign: 'left', margin: 0, paddingLeft: 20 }}>
+											{bullets.map((b, i) => (<li key={i}>{b}</li>))}
+										</ul>
+									)}
+								</>
+							)}
 						</Paper>
 					</Box>
 				</Box>
