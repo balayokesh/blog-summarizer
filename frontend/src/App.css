@@ -38,3 +38,22 @@
     min-height: 180px;
   }
 }
+
+@keyframes mask-text {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.masked-title {
+  background: linear-gradient(90deg, #00c6ff, #0072ff, #00c6ff 80%);
+  background-size: 200% auto;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: mask-text 10s linear infinite;
+}

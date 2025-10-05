@@ -82,7 +82,7 @@ function App() {
 	return (
 		<>
 			<Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-				<Typography variant="h1" component="h1" align="center" sx={{ mt: 4 }}>
+				<Typography variant="h1" component="h1" align="center" sx={{ my: 4 }} className="masked-title">
 					Blog Summarizer
 				</Typography>
 
