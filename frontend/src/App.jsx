@@ -70,7 +70,7 @@ function App() {
 
 				<Box className="main-container" sx={{ flex: 1 }}>
 					<Box className="form-section">
-						<Box sx={{ width: 500, maxWidth: '100%' }}>
+						<Box sx={{ width: 500, maxWidth: '100%' }} style={{ minWidth: 500 }}>
 							<FormControl fullWidth sx={{ mb: 3 }}>
 								<TextField 
 									fullWidth 
@@ -120,7 +120,7 @@ function App() {
 					</Box>
 
 					<Box className="summary-section">
-						<Paper elevation={3} style={{ minHeight: 450 }} sx={{ p: 3, minHeight: 300, width: 500, maxWidth: '100%' }}>
+						<Paper elevation={3} style={{ height: 425 }} sx={{ p: 3, minHeight: 300, minWidth: 500 }}>
 							<Typography variant="h6" component="h2" gutterBottom>
 								Summary Output
 							</Typography>

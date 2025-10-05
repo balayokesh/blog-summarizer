@@ -1,31 +1,23 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
   text-align: center;
-  /* Prevent scrollbar */
-  overflow: hidden;
 }
 
 .main-container {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  align-items: center;
+  justify-content: space-around;
 }
 
-.form-section {
+.form-section, .summary-section {
   flex: 1;
-}
-
-.summary-section {
-  flex: 1;
+  min-height: 300px;
+  margin-top: 20px;
   display: flex;
-  align-items: stretch;
+  justify-content: center;
 }
 
 .summary-section .MuiPaper-root {
-  max-height: 350px;
-  min-height: 300px;
   overflow-y: auto;
   width: 500px;
   max-width: 100%;
