@@ -88,10 +88,18 @@ function App() {
 									variant="outlined"
 									multiline
 									rows={10}
-									sx={{ mb: 2 }}
+									sx={{ mb: 1 }}
 									value={blogContent}
 									onChange={e => setBlogContent(e.target.value)}
 								/>
+								<Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+									<Typography variant="caption" sx={{ color: 'text.secondary' }}>
+										{blogContent.trim().split(/\s+/).filter(Boolean).length} word{blogContent.trim().split(/\s+/).filter(Boolean).length !== 1 ? 's' : ''}
+									</Typography>
+									<Typography variant="caption" sx={{ color: 'text.secondary' }}>
+										{blogContent.length} character{blogContent.length !== 1 ? 's' : ''}
+									</Typography>
+								</Box>
 							</FormControl>
 
 							<FormControl fullWidth sx={{ mb: 3 }}>
