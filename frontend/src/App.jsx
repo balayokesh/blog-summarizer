@@ -57,7 +57,9 @@ function App() {
 		setSummarizedText('');
 		setBullets([]);
 		try {
-			const response = await fetch('https://blog-summarizer-fetn.onrender.com/summarize', {
+			// const backendUrl = "http://localhost:3001"
+			const backendUrl = "https://blog-summarizer-fetn.onrender.com"
+			const response = await fetch(`${backendUrl}/summarize`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ text: blogContent, length: lengthOption })
@@ -106,13 +108,13 @@ function App() {
 	return (
 		<>
 			<Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-				<Typography variant="h1" component="h1" align="center" sx={{ my: 4 }} className="masked-title">
+				<Typography variant="h1" component="h1" align="center" sx={{ my: 4, textAlign: { xs: 'left', md: 'center' } }} className="masked-title">
 					Blog Summarizer
 				</Typography>
 
 				<Box className="main-container" sx={{ flex: 1 }}>
 					<Box className="form-section">
-						<Box sx={{ width: 500, maxWidth: '100%' }} style={{ minWidth: 500 }}>
+						<Box sx={{ width: 500, maxWidth: '100%', minWidth: { xs: '100%', sm: 500 } }}>
 							<FormControl fullWidth sx={{ mb: 3 }}>
 								<TextField 
 									fullWidth 
@@ -184,7 +186,7 @@ function App() {
 					</Box>
 
 					<Box className="summary-section">
-						<Paper elevation={3} style={{ height: 425, position: 'relative' }} sx={{ p: 3, minHeight: 300, minWidth: 500, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
+						<Paper elevation={3} style={{ height: 445, position: 'relative' }}>
 							{/* Floating copy button */}
 							{(summarizedText && !isDefaultSummary || bullets.length > 0) && (
 								<IconButton
