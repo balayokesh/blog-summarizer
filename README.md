@@ -27,15 +27,10 @@ A full-stack AI-powered web application for generating concise summaries and key
   - REST API endpoint `/summarize` for summarization requests
   - Handles prompt building, text cleaning, and error management
 
-- **AI/LLM Integration:**
-  - **Cerebras Model:**
-    - Used for high-quality, fast, and cost-effective summarization
-    - Powers the main summarization logic for both TL;DR and bullet points
-    - Model: `qwen-3-235b-a22b-instruct-2507` (as seen in API responses)
-  - **Llama Model:**
-    - Optionally available for experimentation or fallback
-    - Can be swapped/configured in the backend for different summary styles or research
-
+### ⚡️ Why Cerebras & Llama-3.3-70B?
+- Utilizes **Cerebras Cloud** as the LLM provider for blazing fast API responses.
+- Employs the **Llama-3.3-70B** model, renowned for its high accuracy in summarizing large text content.
+- Ensures both speed and quality in generating concise, reliable summaries.
 ---
 
 ## 🤖 How AI is Used
