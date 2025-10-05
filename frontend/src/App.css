@@ -12,9 +12,10 @@
 .form-section, .summary-section {
   flex: 1;
   min-height: 300px;
-  margin-top: 20px;
   display: flex;
   justify-content: center;
+  align-items: center;
+  margin: auto;
 }
 
 .summary-section .MuiPaper-root {
