@@ -8,6 +8,7 @@ import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Button from '@mui/material/Button';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 
@@ -61,6 +62,14 @@ function App() {
 		}
 	};
 
+	const handleReset = () => {
+		setBlogContent('');
+		setSummarizedText('Use AI to summarize your blog post');
+		setBullets([]);
+		setLengthOption('short');
+		setError('');
+	};
+
 	return (
 		<>
 			<Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -105,16 +114,30 @@ function App() {
 								</Select>
 							</FormControl>
 
-							<Button
-								variant="contained"
-								size='large'
-								endIcon={<AutoAwesomeIcon />}
-								onClick={handleSummarize}
-								fullWidth
-								disabled={loading || !blogContent.trim()}
-							>
-								{loading ? 'Summarizing...' : 'Summarize'}
-							</Button>
+							{/* Button group for Summarize and Reset */}
+							<Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+								<Button
+									variant="contained"
+									size='large'
+									endIcon={<AutoAwesomeIcon />}
+									onClick={handleSummarize}
+									fullWidth
+									disabled={loading || !blogContent.trim()}
+								>
+									{loading ? 'Summarizing...' : 'Summarize'}
+								</Button>
+								<Button
+									variant="outlined"
+									size='large'
+									color="secondary"
+									onClick={handleReset}
+									fullWidth
+									disabled={loading}
+									endIcon={<RestartAltIcon />}
+								>
+									Reset
+								</Button>
+							</Box>
 							{error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
 						</Box>
 					</Box>
